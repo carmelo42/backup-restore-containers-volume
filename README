@@ -1,0 +1,18 @@
+2 scripts to backup to MinIO S3 storage containers volume.
+
+Your MinIO credentials have to be in /etc/minio/credz.conf file:
+```
+[minio]
+storage_url = your_storage_url
+access_key = your_access_key
+secret_key = your_secret_key
+```
+
+To backup a container : 
+
+`./backup-container-volume.py container_name`
+(the 7 last backups are kept, older are deleted)
+
+To restore a container volume from last backup :
+
+`./restore-container-volume.py container_name`
