@@ -39,14 +39,20 @@ def load_minio_credentials(file_path="/etc/minio/credz.conf"):
         return None, None
 
 def make_tarfile(output_filename, source_dir):
-    with tarfile.open(output_filename, 'w:gz') as tar:
-        tar.add(source_dir, arcname=os.path.basename(source_dir))
+    try:
+        with tarfile.open(output_filename, 'w:gz') as tar:
+            tar.add(source_dir, arcname=os.path.basename(source_dir))
+    except Exception as e:
+        print(f"Une erreur s'est produite lors de la création de l'archive tar : {e}")
 
 def upload_file_to_minio(minioClient, bucket_name, dst_file, file_path):
     # Envoyer le fichier vers MinIO
-    with open(file_path, 'rb') as file_data:
-        file_stat = os.stat(file_path)
-        minioClient.put_object(bucket_name, dst_file, file_data, file_stat.st_size)
+    try:
+        with open(file_path, 'rb') as file_data:
+            file_stat = os.stat(file_path)
+            minioClient.put_object(bucket_name, dst_file, file_data, file_stat.st_size)
+    except Exception as e:
+        print(f"Une erreur s'est produite lors de l'envoi du fichier vers MinIO : {e}")
 
 def keep_last_n_files(minioClient, bucket_name):
     object_info_list = []
@@ -95,4 +101,3 @@ for container in containers:
                 print(f"Le fichier {output_file} a été supprimé.")
             else:
                 print(f"Le fichier {output_file} n'existe pas.")
-

@@ -49,10 +49,12 @@ def download_latest_file(minio_client, bucket_name, destination_folder):
     object_name = latest_object.object_name
     destination_path = f"{destination_folder}/{object_name}"
 
-    print(f"Téléchargement du fichier le plus récent : {object_name} ...")
-    minio_client.fget_object(bucket_name, object_name, destination_path)
-
-    print(f"Le fichier a été téléchargé avec succès vers : {destination_path}")
+    try:
+        print(f"Téléchargement du fichier le plus récent : {object_name} ...")
+        minio_client.fget_object(bucket_name, object_name, destination_path)
+        print(f"Le fichier a été téléchargé avec succès vers : {destination_path}")
+    except Exception as e:
+        print(f"Une erreur s'est produite lors du téléchargement du fichier : {e}")
     return destination_path
 
 def clear_data_folder(folder):
@@ -107,5 +109,3 @@ for container in containers:
 
         extract_tar_gz(latest_backup, path.rstrip("_data"))
         container.start()
-
-
